@@ -1,5 +1,5 @@
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -15,7 +15,21 @@ def browse(request, category):
     return render(request, 'browse.html', {'categories': categories})
 
 def login(request):
-    return render(request, 'login.html', {'hide_login': True})
+    message = None
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            auth_login(request, user)
+            return redirect('home')
+        else:
+            message = "Username or password not found."
+    
+    return render(request, 'login.html', {
+        'message': message,
+        'hide_login': True
+    })
 
 def register(request):
     if request.method == 'POST':
@@ -25,7 +39,7 @@ def register(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            auth_login(request, user)
             return redirect('home')
     else:
         form = UserCreationForm()
