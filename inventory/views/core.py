@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from inventory import models
+from . import forms
 
 
 def home(request):
@@ -11,3 +12,20 @@ def home(request):
 def browse(request, category):
     categories = models.Category.objects.all()
     return render(request, 'browse.html', {'categories': categories})
+    
+def item(request):
+    if request.method == "POST":
+        form = forms.ItemForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+            return redirect('browse', 'Auto')
+    else:
+        form = forms.ItemForm()
+        
+    
+    categories = models.Category.objects.all()
+    return render(request, 'item.html', {
+        'categories': categories,
+        'form': form
+    })
