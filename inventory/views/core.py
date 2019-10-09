@@ -11,7 +11,11 @@ def home(request):
     
 def browse(request, category):
     categories = models.Category.objects.all()
-    return render(request, 'browse.html', {'categories': categories})
+    items = models.Item.objects.filter(category__name=category)
+    return render(request, 'browse.html', {
+        'categories': categories,
+        'items': items
+    })
     
 def item(request):
     if request.method == "POST":
