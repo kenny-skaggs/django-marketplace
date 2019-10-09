@@ -1,16 +1,12 @@
 {% extends "base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
   <div class="d-flex justify-content-center">
-    <form>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username">
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password">
-      </div>
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
       <button type="submit" class="btn btn-primary">Make an account</button>
     </form>
   </div>
