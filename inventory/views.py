@@ -1,4 +1,4 @@
-from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -48,3 +48,7 @@ def register(request):
         'form': form,
         'hide_login': True
     })
+    
+def logout(request):
+    auth_logout(request)
+    return redirect('home')
