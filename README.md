@@ -4,8 +4,9 @@ A marketplace coding exercise with Django.
 ## Dependencies
 Whether setting up in a production environment or locally for development, follow these steps to install the necessary packages.
 
-install pipenv
-pipenv install dependencies
+1) Install pipenv if you don't already have it.
+2) In a terminal, navigate to the root directory and run the following to set up the project's virtual environment
+> pipenv install
 
 ## Usage
 ### Running the server
@@ -34,7 +35,12 @@ Categories are currently read only so don't accept as many methods as the items 
 
 `/api/items/`
 - **GET**: List the items available in the system.
-- **POST**: Create a post a new item. _Requires Authentication_
+- **POST**: Create a new item. _Requires authentication_
+
+`/api/items/:item_id/`
+- **PUT**: Set all fields of an item. _Requires authentication as the author of the item_
+- **PATCH**: Allows for providing values for only the fields to set, and leaving out others that will remain unchanged. _Requires authentication as the author of the item_
+- **DELETE**: Deletes an item from the marketplace. _Requires authentication as the author of the item_
 
 ## Deploying
 This project can be run in production with Gunicorn. The following is an example systemctl unit that can be used to run the Gunicorn server as a socket. For additional security move the sensitive environment variables into a separate text file with restricted read permissions. Replace all fields surrounded by underscores with the system specific values (also removing the underscores).
