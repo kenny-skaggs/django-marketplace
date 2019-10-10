@@ -50,3 +50,8 @@ def item_edit(request, item_id):
         'categories': categories,
         'form': form
     })
+    
+def item_delete(request, item_id):
+    item = get_object_or_404(models.Item, id=item_id)
+    item.delete()
+    return redirect('browse', item.category.name)

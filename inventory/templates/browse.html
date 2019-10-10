@@ -8,7 +8,7 @@
         <p class="card-text">{{ item.title }}</p>
         {% if item.author_id == user.id %}
           <a href="{% url 'item_edit' item.id %}" class="card-link">Edit</a>
-          <a href="#" class="card-link">Another link</a>
+          <a href="{% url 'item_delete' item.id %}" class="card-link">Delete</a>
         {% endif %}
       </div>
     </div>
