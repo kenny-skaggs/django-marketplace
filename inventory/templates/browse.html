@@ -6,6 +6,8 @@
       <div class="card-body">
         <h5 class="card-title">${{ item.price }}</h5>
         <p class="card-text">{{ item.title }}</p>
+        <a href="{% url 'item_edit' item.id %}" class="card-link">Edit</a>
+        <a href="#" class="card-link">Another link</a>
       </div>
     </div>
   {% endfor %}
