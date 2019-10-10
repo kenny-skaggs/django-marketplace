@@ -7,9 +7,34 @@ Whether setting up in a production environment or locally for development, follo
 install pipenv
 pipenv install dependencies
 
-## Development
-pipenv shell
+## Usage
+### Running the server
+In a terminal at the project's root directory enter
+> pipenv shell
 
+to enter the virtual environment and then run the Django server with
+> python manage.py runserver
+
+### Interacting with the site
+Users are able to view items for sale in various categories (links in the navbar). To post items users will need to sign up and log in. Items can be edited or removed by the user that has posted them.
+
+### Interacting with the API
+#### Authentication
+The API uses basic auth. If you're using Curl with an endpoint that requires authentication you'd provide your credentials as shown by the following example:
+> curl -X "DELETE" --user username:password  http://localhost:8000/api/items/8/
+
+#### Endpoints
+##### Categories
+Categories are currently read only so don't accept as many methods as the items endpoint.
+
+`/api/categories/`
+- **GET**: List the categories available in the system.
+`/api/categories/:category_id/`
+- **GET**: Retrieve the details of a single category.
+
+`/api/items/`
+- **GET**: List the items available in the system.
+- **POST**: Create a post a new item. _Requires Authentication_
 
 ## Deploying
 This project can be run in production with Gunicorn. The following is an example systemctl unit that can be used to run the Gunicorn server as a socket. For additional security move the sensitive environment variables into a separate text file with restricted read permissions. Replace all fields surrounded by underscores with the system specific values (also removing the underscores).
