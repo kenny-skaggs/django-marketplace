@@ -21,11 +21,13 @@ def item_new(request):
     if request.method == "POST":
         form = forms.ItemForm(request.POST)
         if form.is_valid():
-            form.save()
+            item = form.save(commit=False)
+            item.author_id = request.user.id
+            item.save()
+            
             return redirect('home')
     else:
         form = forms.ItemForm()
-        
     
     categories = models.Category.objects.all()
     return render(request, 'item.html', {

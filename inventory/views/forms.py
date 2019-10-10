@@ -11,4 +11,4 @@ class ItemForm(ModelForm):
     category = CategoryModelChoiceField(queryset=models.Category.objects.all())
     class Meta:
         model = models.Item
-        fields = '__all__'
+        exclude = ['author']
