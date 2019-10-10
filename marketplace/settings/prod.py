@@ -1,6 +1,10 @@
 from .base import *
 
+DEBUG = False
+
 ALLOWED_HOSTS = []  # TODO: set domain here
+
+SECRET_KEY = os.environ.get('MARKETPLACE_SECRET_KEY')
 
 DATABASES = {
     'default': {
