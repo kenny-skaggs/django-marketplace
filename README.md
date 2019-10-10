@@ -12,8 +12,9 @@ pipenv shell
 
 
 ## Deploying
-This project can be run in production with Gunicorn. The following is an example systemctl unit that can be used to run the Gunicorn server as a socket. For additional security move the sensitive environment variables into a separate text file with restricted read permissions. Replace all italicized values with the system specific values.
+This project can be run in production with Gunicorn. The following is an example systemctl unit that can be used to run the Gunicorn server as a socket. For additional security move the sensitive environment variables into a separate text file with restricted read permissions. Replace all fields surrounded by underscores with the system specific values (also removing the underscores).
 
+```
 [Unit]
 Description=gunicorn daemon
 After=network.target
@@ -33,3 +34,4 @@ ExecStart=_path/to/gunicorn_ --workers 3 --bind unix:_/path/to/project/root_/gun
 
 [Install]
 WantedBy=multi-user.target
+```
