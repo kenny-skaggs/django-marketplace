@@ -30,7 +30,7 @@ def item_new(request):
         form = forms.ItemForm()
     
     categories = models.Category.objects.all()
-    return render(request, 'item.html', {
+    return render(request, 'item_new.html', {
         'categories': categories,
         'form': form
     })
@@ -45,9 +45,8 @@ def item_edit(request, item_id):
     else:
         form = forms.ItemForm(instance=item)
         
-    
     categories = models.Category.objects.all()
-    return render(request, 'item.html', {
+    return render(request, 'item_edit.html', {
         'categories': categories,
         'form': form
     })
