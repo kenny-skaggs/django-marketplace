@@ -4,18 +4,18 @@ from rest_framework import serializers
 from . import models
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username']
         
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
         fields = '__all__'
         
-class ItemSerializer(serializers.HyperlinkedModelSerializer):
-    author = UserSerializer(many=False)
+class ItemSerializer(serializers.ModelSerializer):
+    author = UserSerializer(many=False, read_only=True)
     class Meta:
         model = models.Item
         fields = '__all__'

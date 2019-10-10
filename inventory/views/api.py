@@ -14,6 +14,12 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
     
+    def perform_create(self, serializer):
+        if self.request.user.is_authenticated:
+            serializer.save(author=self.request.user)
+        else:
+            return PermissionDenied()
+    
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         
