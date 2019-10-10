@@ -7,7 +7,7 @@ from . import forms
 
 def home(request):
     category = models.Category.objects.first()
-    return redirect('browse', category=category.name)
+    return redirect('browse', category_name=category.name)
     
 def browse(request, category_name):
     categories = models.Category.objects.all()
