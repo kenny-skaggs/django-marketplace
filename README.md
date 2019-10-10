@@ -22,15 +22,15 @@ After=network.target
 [Service]
 User=<web-user>
 Group=www-data
-Environment=PYTHONPATH=*/path/to/project/root*
-Environment=MARKETPLACE_DB_USER=*database username*
-Environment=MARKETPLACE_DB_PASSWORD=*database user password*
-Environment=MARKETPLACE_DB=*database name*
-Environment=MARKETPLACE_DB_HOST=*database server host*
-Environment=MARKETPLACE_DB_PORT=*database server port*
-Environment=MARKETPLACE_SECRET_KEY=*Django server secret key*
-WorkingDirectory=*/path/to/project/root*
-ExecStart=*path/to/gunicorn* --workers 3 --bind unix:*/path/to/project/root*/gunicorn.sock marketplace.wsgi --preload --timeout 300
+Environment=PYTHONPATH=_/path/to/project/root_
+Environment=MARKETPLACE_DB_USER=_database username_
+Environment=MARKETPLACE_DB_PASSWORD=_database user password_
+Environment=MARKETPLACE_DB=_database name_
+Environment=MARKETPLACE_DB_HOST=_database server host_
+Environment=MARKETPLACE_DB_PORT=_database server port_
+Environment=MARKETPLACE_SECRET_KEY=_Django server secret key_
+WorkingDirectory=_/path/to/project/root_
+ExecStart=_path/to/gunicorn_ --workers 3 --bind unix:_/path/to/project/root_/gunicorn.sock marketplace.wsgi --preload --timeout 300
 
 [Install]
 WantedBy=multi-user.target
