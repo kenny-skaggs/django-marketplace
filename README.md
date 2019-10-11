@@ -28,6 +28,7 @@ The API uses basic auth. If you're using Curl with an endpoint that requires aut
 
 `/api/categories/`
 - **GET**: List the categories available in the system.
+
 `/api/categories/:category_id/`
 - **GET**: Retrieve the details of a single category.
 
