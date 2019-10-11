@@ -28,7 +28,7 @@ def item_new(request):
                 item.author_id = request.user.id
                 item.save()
                 
-                return redirect('home')
+                return redirect('browse', item.category.name)
         else:
             form = forms.ItemForm()
         
@@ -48,7 +48,7 @@ def item_edit(request, item_id):
             form = forms.ItemForm(request.POST, instance=item)
             if form.is_valid():
                 form.save()
-                return redirect('browse', 'Auto')
+                return redirect('browse', item.category.name)
         else:
             form = forms.ItemForm(instance=item)
             
