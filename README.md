@@ -13,7 +13,10 @@ Whether setting up in a production environment or locally for development, follo
 In a terminal at the project's root directory enter
 > pipenv shell
 
-to enter the virtual environment and then run the Django server with
+to enter the virtual environment. Ensure the database is up to date with the latest schema by running
+> python manage.py migrate
+
+then run the Django server with
 > python manage.py runserver
 
 ### Interacting with the site
