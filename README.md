@@ -50,8 +50,8 @@ Description=gunicorn daemon
 After=network.target
 
 [Service]
-User=<web-user>
-Group=www-data
+User=_web user_
+Group=_web group_
 Environment=PYTHONPATH=_/path/to/project/root_
 Environment=MARKETPLACE_DB_USER=_database username_
 Environment=MARKETPLACE_DB_PASSWORD=_database user password_
