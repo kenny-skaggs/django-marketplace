@@ -25,8 +25,6 @@ The API uses basic auth. If you're using Curl with an endpoint that requires aut
 > curl -X "DELETE" --user username:password  http://localhost:8000/api/items/8/
 
 #### Endpoints
-##### Categories
-Categories are currently read only so don't accept as many methods as the items endpoint.
 
 `/api/categories/`
 - **GET**: List the categories available in the system.
