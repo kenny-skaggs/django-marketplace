@@ -2,7 +2,9 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic import RedirectView
+from django.views.generic.edit import FormView
 
 
     
@@ -24,23 +26,26 @@ def login(request):
         'hide_login': True
     })
 
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            auth_login(request, user)
-            return redirect('home')
-    else:
-        form = UserCreationForm()
+class RegisterView(FormView):
+    template_name = 'register.html'
+    form_class = UserCreationForm
     
-    return render(request, 'register.html', {
-        'form': form,
-        'hide_login': True
-    })
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=raw_password)
+        auth_login(self.request, user)
+        return super().form_valid(form)
+        
+    def get_success_url(self):
+        return reverse('home')
+        
+    #TODO: make this a mixin
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hide_login'] = True
+        return context
     
     
 class LogoutView(RedirectView):

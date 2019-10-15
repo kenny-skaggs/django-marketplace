@@ -15,6 +15,6 @@ urlpatterns = [
     path('item/delete/<int:item_id>', views.core.item_delete, name='item_delete'),
     path('login', views.auth.login, name='login'),
     path('logout', views.auth.LogoutView.as_view(), name='logout'),
-    path('register', views.auth.register, name='register'),
+    path('register', views.auth.RegisterView.as_view(), name='register'),
     path('api/', include(router.urls))
 ]
