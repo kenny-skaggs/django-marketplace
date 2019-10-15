@@ -28,7 +28,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         else:
-            return HttpResponseForbidden()
+            raise PermissionDenied()
             
     def update(self, request, *args, **kwargs):
         return self._update_helper(request, False);
