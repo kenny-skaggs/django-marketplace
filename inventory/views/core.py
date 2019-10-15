@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
 from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
@@ -29,15 +31,21 @@ class BrowseView(CategoryDisplayMixin, ListView):
     def get_queryset(self):
         return models.Item.objects.filter(category__name=self.kwargs['category_name'])
         
-class NewItemView(CategoryDisplayMixin, CreateView):
+class ItemFormMixin(LoginRequiredMixin, CategoryDisplayMixin):
+    login_url = reverse_lazy('login')
     form_class = forms.ItemForm
+
+    def get_success_url(self):
+        return reverse('browse', kwargs={'category_name': self.object.category.name})
+        
+class NewItemView(ItemFormMixin, CreateView):
     template_name = 'item_new.html'
     
     def form_valid(self, form):
         form.save(self.request.user)
         return super().form_valid(form)
-    
-    def get_success_url(self):
+        
+class EditItemView(ItemFormMixin, UpdateView):
         return redirect('browse', self.object.category.name)
     
 def item_edit(request, item_id):

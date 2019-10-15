@@ -13,8 +13,9 @@ class ItemForm(ModelForm):
         model = models.Item
         exclude = ['author']
         
-    def save(self, user):
+    def save(self, user=None):
         item = super().save(commit=False)
-        item.author_id = request.user.id
+        if user:
+            item.author_id = user.id
         item.save()
         return item
