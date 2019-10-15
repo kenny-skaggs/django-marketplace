@@ -14,7 +14,6 @@ class AuthFormViewMixin:
         context['hide_login'] = True
         return context
 
-
 class LoginView(AuthFormViewMixin, FormView):
     template_name = 'login.html'
     form_class = AuthenticationForm
@@ -34,7 +33,6 @@ class RegisterView(AuthFormViewMixin, FormView):
         user = authenticate(username=username, password=raw_password)
         login(self.request, user)
         return super().form_valid(form)
-    
     
 class LogoutView(RedirectView):
     pattern_name = 'home'

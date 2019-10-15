@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import RedirectView
+from django.views.generic.list import ListView
 
 from inventory import models
 from . import forms
@@ -14,14 +15,18 @@ class HomeView(RedirectView):
         kwargs['category_name'] = category.name
         return super().get_redirect_url(*args, **kwargs)
         
+class CategoryDisplayMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = models.Category.objects.all()
+        return context
+
+class BrowseView(CategoryDisplayMixin, ListView):
+    template_name = 'browse.html'
+    context_object_name = 'items'
     
-def browse(request, category_name):
-    categories = models.Category.objects.all()
-    items = models.Item.objects.filter(category__name=category_name)
-    return render(request, 'browse.html', {
-        'categories': categories,
-        'items': items
-    })
+    def get_queryset(self):
+        return models.Item.objects.filter(category__name=self.kwargs['category_name'])
     
 def item_new(request):
     if not request.user.is_authenticated:
