@@ -1,5 +1,5 @@
 from django.http import HttpResponseForbidden
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
@@ -14,19 +14,10 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-            
-    def create(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        else:
-            return HttpResponseForbidden()
             
     def _update_helper(self, request, partial):
         instance = self.get_object()
