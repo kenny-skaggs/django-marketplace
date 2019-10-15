@@ -7,24 +7,13 @@ from django.views.generic import RedirectView
 from django.views.generic.edit import FormView
 
 
+class LoginView(FormView):
+    template_name = 'login.html'
+    form_class = AuthenticationForm
     
-
-def login(request):
-    message = None
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user:
-            auth_login(request, user)
-            return redirect('home')
-        else:
-            message = "Username or password not found."
-    
-    return render(request, 'login.html', {
-        'message': message,
-        'hide_login': True
-    })
+    def form_valid(self, form):
+        auth_login(self.request, user) # TODO: I can get rid of the auth prefix now
+        return super().form_valid(form)
 
 class RegisterView(FormView):
     template_name = 'register.html'
@@ -37,7 +26,7 @@ class RegisterView(FormView):
         user = authenticate(username=username, password=raw_password)
         auth_login(self.request, user)
         return super().form_valid(form)
-        
+    
     def get_success_url(self):
         return reverse('home')
         
