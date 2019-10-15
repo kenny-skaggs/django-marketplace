@@ -1,23 +1,12 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.urls import reverse
 from django.views.generic import RedirectView
 from django.views.generic.edit import FormView
 
+from . import mixins
 
-class AuthFormViewMixin:
-    def get_success_url(self):
-        if 'next' in self.request.GET:
-            return self.request.GET['next']
-        else:
-            return reverse('home')
-        
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hide_login'] = True
-        return context
 
-class LoginView(AuthFormViewMixin, FormView):
+class LoginView(mixins.AuthFormViewMixin, FormView):
     template_name = 'login.html'
     form_class = AuthenticationForm
     
@@ -25,7 +14,7 @@ class LoginView(AuthFormViewMixin, FormView):
         login(self.request, form.get_user())
         return super().form_valid(form)
 
-class RegisterView(AuthFormViewMixin, FormView):
+class RegisterView(mixins.AuthFormViewMixin, FormView):
     template_name = 'register.html'
     form_class = UserCreationForm
     
