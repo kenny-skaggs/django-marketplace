@@ -10,7 +10,7 @@ router.register(r'items', views.api.ItemViewSet)
 urlpatterns = [
     path('', views.core.HomeView.as_view(), name='home'),
     path('browse/<str:category_name>', views.core.BrowseView.as_view(), name='browse'),
-    path('item/new', views.core.item_new, name='item_new'),
+    path('item/new', views.core.NewItemView.as_view(), name='item_new'),
     path('item/edit/<int:item_id>', views.core.item_edit, name='item_edit'),
     path('item/delete/<int:item_id>', views.core.item_delete, name='item_delete'),
     path('login', views.auth.LoginView.as_view(), name='login'),

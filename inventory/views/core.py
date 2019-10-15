@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import RedirectView
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
 from inventory import models
@@ -27,27 +28,17 @@ class BrowseView(CategoryDisplayMixin, ListView):
     
     def get_queryset(self):
         return models.Item.objects.filter(category__name=self.kwargs['category_name'])
-    
-def item_new(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    else:
-        if request.method == "POST":
-            form = forms.ItemForm(request.POST)
-            if form.is_valid():
-                item = form.save(commit=False)
-                item.author_id = request.user.id
-                item.save()
-                
-                return redirect('browse', item.category.name)
-        else:
-            form = forms.ItemForm()
         
-        categories = models.Category.objects.all()
-        return render(request, 'item_new.html', {
-            'categories': categories,
-            'form': form
-        })
+class NewItemView(CategoryDisplayMixin, CreateView):
+    form_class = forms.ItemForm
+    template_name = 'item_new.html'
+    
+    def form_valid(self, form):
+        form.save(self.request.user)
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return redirect('browse', self.object.category.name)
     
 def item_edit(request, item_id):
     item = get_object_or_404(models.Item, id=item_id)

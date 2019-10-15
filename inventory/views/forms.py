@@ -12,3 +12,9 @@ class ItemForm(ModelForm):
     class Meta:
         model = models.Item
         exclude = ['author']
+        
+    def save(self, user):
+        item = super().save(commit=False)
+        item.author_id = request.user.id
+        item.save()
+        return item
