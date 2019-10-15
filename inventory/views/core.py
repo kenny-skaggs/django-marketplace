@@ -1,13 +1,19 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import RedirectView
 
 from inventory import models
 from . import forms
 
 
-def home(request):
-    category = models.Category.objects.first()
-    return redirect('browse', category_name=category.name)
+class HomeView(RedirectView):
+    pattern_name = 'browse'
+    
+    def get_redirect_url(self, *args, **kwargs):
+        category = models.Category.objects.first()
+        kwargs['category_name'] = category.name
+        return super().get_redirect_url(*args, **kwargs)
+        
     
 def browse(request, category_name):
     categories = models.Category.objects.all()
