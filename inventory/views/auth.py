@@ -1,12 +1,16 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import RedirectView
 from django.views.generic.edit import FormView
 
 
 class AuthFormViewMixin:
-    success_url = reverse_lazy('home')
+    def get_success_url(self):
+        if 'next' in self.request.GET:
+            return self.request.GET['next']
+        else:
+            return reverse('home')
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
