@@ -1,7 +1,5 @@
-from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import RedirectView
 from django.views.generic.edit import FormView
@@ -12,8 +10,11 @@ class LoginView(FormView):
     form_class = AuthenticationForm
     
     def form_valid(self, form):
-        auth_login(self.request, user) # TODO: I can get rid of the auth prefix now
+        login(self.request, form.get_user())
         return super().form_valid(form)
+        
+    def get_success_url(self):
+        return reverse('home')
 
 class RegisterView(FormView):
     template_name = 'register.html'
@@ -24,7 +25,7 @@ class RegisterView(FormView):
         username = form.cleaned_data.get('username')
         raw_password = form.cleaned_data.get('password1')
         user = authenticate(username=username, password=raw_password)
-        auth_login(self.request, user)
+        login(self.request, user)
         return super().form_valid(form)
     
     def get_success_url(self):
@@ -41,5 +42,5 @@ class LogoutView(RedirectView):
     pattern_name = 'home'
     
     def get(self, request, *args, **kwargs):
-        auth_logout(request)
+        logout(request)
         return super(LogoutView, self).get(request, *args, **kwargs)
