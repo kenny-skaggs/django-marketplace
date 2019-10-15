@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import RedirectView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
 from inventory import models
@@ -45,34 +45,29 @@ class NewItemView(ItemFormMixin, CreateView):
         form.save(self.request.user)
         return super().form_valid(form)
         
-class EditItemView(ItemFormMixin, UpdateView):
-        return redirect('browse', self.object.category.name)
+class AuthorCheckMixin:
+    def is_user_author_of(self, item):
+        if self.request.user.id != item.author_id:
+            raise Http404()
+        return True
+        
+class EditItemView(AuthorCheckMixin, ItemFormMixin, UpdateView):
+    template_name = 'item_edit.html'
+    model = models.Item
     
-def item_edit(request, item_id):
-    item = get_object_or_404(models.Item, id=item_id)
-    
-    if item.author_id != request.user.id:
-        return HttpResponseForbidden()
-    else:
-        if request.method == "POST":
-            form = forms.ItemForm(request.POST, instance=item)
-            if form.is_valid():
-                form.save()
-                return redirect('browse', item.category.name)
-        else:
-            form = forms.ItemForm(instance=item)
+    def get_object(self, *args, **kwargs):
+        item = super().get_object(*args, **kwargs)
+        if self.is_user_author_of(item):
+            return item
             
-        categories = models.Category.objects.all()
-        return render(request, 'item_edit.html', {
-            'categories': categories,
-            'form': form
-        })
+class ItemDeleteView(AuthorCheckMixin, RedirectView):
+    pattern_name = 'browse'
     
-def item_delete(request, item_id):
-    item = get_object_or_404(models.Item, id=item_id)
-    
-    if item.author_id != request.user.id:
-        return HttpResponseForbidden()
-    else:
-        item.delete()
-        return redirect('browse', item.category.name)
+    def get_redirect_url(self, *args, **kwargs):
+        item = get_object_or_404(models.Item, id=self.kwargs['item_id'])
+        if self.is_user_author_of(item):
+            item.delete()
+            
+            kwargs['category_name'] = item.category.name
+            del kwargs['item_id']
+            return super().get_redirect_url(*args, **kwargs)
